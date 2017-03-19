@@ -1,0 +1,142 @@
+%==============================================================================
+% Sjabloon onderzoeksvoorstel bachelorproef
+%==============================================================================
+% Gebaseerd op LaTeX-sjabloon ‘Stylish Article’ (zie voorstel.cls)
+% Auteur: Jens Buysse, Bert Van Vreckem
+
+% TODO: Compileren document:
+% 1) Vervang ‘naam_voornaam’ in de bestandsnaam door je eigen naam, bv.
+%    buysse_jens_voorstel.tex
+% 2) pdflatex naam_voornaam_voorstel.tex (2 keer)
+% 3) biber naam_voornaam_voorstel
+% 4) pdflatex naam_voornaam_voorstel.tex (1 keer)
+
+\documentclass[fleqn,10pt]{voorstel}
+
+%------------------------------------------------------------------------------
+% Metadata over het artikel
+%------------------------------------------------------------------------------
+
+\JournalInfo{HoGent Bedrijf en Organisatie}
+\Archive{Bachelorproef 2016 - 2017}
+
+%---------- Titel & auteur ----------------------------------------------------
+
+% TODO: geef werktitel van je eigen voorstel op
+\PaperTitle{Log monitoring aan de hand van Elastic Stack}
+\PaperType{Onderzoeksvoorstel Bachelorproef} % Type document
+
+% TODO: vul je eigen naam in als auteur, geef ook je emailadres mee!
+% TODO: vul de naam van je co-promotor(en) in als tweede (derde, ...) auteur.
+% Dien je voorstel pas in nadat je co-promotor de kans gehad heeft na te lezen
+% en feedback te geven!
+\Authors{Bert Vervaele\textsuperscript{1}} % Authors
+\affiliation{\textbf{Contact:}
+  \textsuperscript{1} \href{mailto:bert.vervaele@student.hogent.be}{bert.vervaele@student.hogent.be}}
+
+%---------- Abstract ----------------------------------------------------------
+
+\Abstract{Servers houden log files bij waarin informatie te vinden is over allerhande uitgevoerde acties. Elk type server doet dit op een verschillende plaats en de files zijn op een andere manier opgebouwd. Dit zorgt ervoor dat log files vaak niet grondig bekeken worden en nuttige informatie verloren kan gaan. Het verzamelen van al deze files zal gebeuren door gebruik te maken van Logstash. Eénmaal alles gecentraliseerd, zal gebruik gemaakt worden van Elasticsearch om te zoeken in deze files. Er zal gezocht worden naar indicatoren die een probleem zouden kunnen veroorzaken in de toekomst. Via deze weg zal geprobeerd worden alle nuttige informatie uit de log files te halen en daarmee trachten een monitoring tool op te bouwen. De hoeveelheid aan data zal enkel maar stijgen in de toekomst en dit zou zorgen voor nog meer verloren informatie.
+}
+
+%---------- Onderzoeksdomein en sleutelwoorden --------------------------------
+% TODO: Sleutelwoorden:
+%
+% Het eerste sleutelwoord beschrijft het onderzoeksdomein. Je kan kiezen uit
+% deze lijst:
+%
+% - Mobiele applicatieontwikkeling
+% - Webapplicatieontwikkeling
+% - Applicatieontwikkeling (andere)
+% - Systeem- en netwerkbeheer
+% - Mainframe
+% - E-business
+% - Databanken en big data
+% - Machine learning en kunstmatige intelligentie
+% - Andere (specifieer)
+%
+% De andere sleutelwoorden zijn vrij te kiezen
+
+\Keywords{Databanken en big data. monitoring --- Elastic Stack --- no index data} % Keywords
+\newcommand{\keywordname}{Sleutelwoorden} % Defines the keywords heading name
+
+%---------- Titel, inhoud -----------------------------------------------------
+\begin{document}
+
+\flushbottom % Makes all text pages the same height
+\maketitle % Print the title and abstract box
+\tableofcontents % Print the contents section
+\thispagestyle{empty} % Removes page numbering from the first page
+
+
+\section{Introductie}
+\label{sec:introductie}
+
+Het idee voor dit onderwerp kwam van het bedrijf oXya. Dit is een bedrijf die SAP servers host en daar hoort natuurlijk ook monitoring van de servers bij. Ze zijn steeds op zoek naar nieuwe manieren om problemen te voorspellen/sneller te signaleren. Momenteel maken ze enkel gebruik van simpel te verkrijgen data zoals capaciteit, temperatuur, \dots. Dus momenteel gaat de informatie uit de log files verloren want deze informatie is niet simpel te verkrijgen voor enkele redenen:
+\begin{itemize}
+	\item geen eenduidige structuur (windows,max,linux, ...)
+	\item verschillende manieren voor tijdsaanduidingen
+	\item niet gecentraliseerd.
+\end{itemize}
+
+Onderzocht zal worden als Elastic Stack hier voor optimaal is of als er iets beter te verkrijgen is.
+
+Welke bestaande toepassing kunnen we reeds gebruiken en welke zijn bruikbaar na een uitbreiding?
+
+Welke impact heeft een Elastic Stacks op een servers?
+
+En de voornaamste vraag: is het haalbaar via deze weg nuttige informatie te verkrijgen voor het opstellen/uitbreiden van een monitoring tool.
+
+\section{State-of-the-art}
+\label{sec:state-of-the-art}
+Elasticsearch wordt door heel wat bekende en moderne bedrijven \autocite{15tech} gebruikt:
+\begin{itemize}
+	\item Bloomberg
+	\item LinkedIn
+	\item Netflix
+\end{itemize}
+Elastic voorziet zelf ook een uitbreiding op de Elastic Stack namelijk  \textcite{X-Pack}.
+Er zijn nog niet veel andere open source toepassingen te vinden waar Elastic Stack gebruikt wordt voor monitoring.
+
+%---------- Methodologie ------------------------------------------------------
+\section{Methodologie}
+\label{sec:methodologie}
+
+Eerst en vooral zal onderzocht worden of elasticsearch voor deze toepassing de juiste keuze was. Er zal gestart worden met enkele vergelijkende experimenten. 
+
+Daarna wordt verder gegaan met de zoektoch naar andere reeds bestaande programma's. Deze kunnen gesimuleerd worden om te zien als deze een meerwaarde kunnen bieden. 
+
+Om te onderzoeken welke impact elasticsearch heeft op een server zullen enkele simulaties uitgevoerd worden.
+
+Na het ontwikkelen van een eigen monitoring tool zullen opnieuw simulaties plaats vinden om te bekijken of deze tool meer zou kunnen dan de reeds gebruikte tools. 
+
+%---------- Verwachte resultaten ----------------------------------------------
+\section{Verwachte resultaten}
+\label{sec:verwachte_resultaten}
+
+Verwacht wordt dat Elastic Stack voor deze toepassing de juiste keuze is. Het omvat zowel het centraliseren van data als het verwerken ervan.
+
+Er zullen ongetwijfeld reeds enkele bruikbare programma's bestaan. Helaas worden deze niet altijd beschikbaar gesteld voor iedereen en kan het dus een lange zoektocht worden.
+
+De impact op een server zal verwaarloosbaar zijn. De server zal geen hinder ondervinden na het toevoegen van een Elastic Stack.
+
+Verwacht wordt dat het haalbaar is om via deze weg nuttige informatie te verkrijgen. Het ontwikkelen/uitbreiden van een monitoring tool zal dan wel enkele dagen intensief werk vergen om iets bruikbaars te produceren.
+
+%---------- Verwachte conclusies ----------------------------------------------
+\section{Verwachte conclusies}
+\label{sec:verwachte_conclusies}
+
+Geconcludeerd kan worden dat het gebruiken van een Elastic Stack heel wat nieuwe monitoring mogelijkheden met zich meebrengt. Verder onderzoek binnen de log files kan nieuwe belangrijke verbanden blootleggen. Om de down time van een server dus nog te te verkorten kan gebruik gemaakt worden van een Elastic Stack.
+
+%------------------------------------------------------------------------------
+% Referentielijst
+%------------------------------------------------------------------------------
+% TODO: de gerefereerde werken moeten in BibTeX-bestand ``biblio.bib''
+% voorkomen. Gebruik JabRef om je bibliografie bij te houden en vergeet niet
+% om compatibiliteit met Biber/BibLaTeX aan te zetten (File > Switch to
+% BibLaTeX mode)
+
+\phantomsection
+\printbibliography[heading=bibintoc]
+
+\end{document}
