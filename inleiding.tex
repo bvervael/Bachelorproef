@@ -19,10 +19,13 @@ Oxya is een internationaal bedrijf met ondermeer een vesteging in Kortrijk. Het 
 
 Momenteel werken ze bij Oxya met statische monitoringtools. Als een disk voor 95\% vol staat zal een alert ontstaan. Het probleem hier is dat deze alerts vaak te laat onstaan. Als het CPU gebruik plots logaritmisch begint te stijgen zal het alert pas ontstaan enkele seconden voor de server op 100\% zal draaien. 
  
-Een aanvulling op hun monitoringtool zou dus het gebruiken van logfiles kunnen zijn. Hier door zouden sommige problemen eerder aan het licht komen en dan kan er nog in gegrepen worden voor het te laat is. Voor het analyseren van de logs zal gebruik gemaakt worden elastic stack. Hier voor werd gekozen omdat het alle tools bevat om van logs naar grafieken te gaan. Een andere reden is dat het open-source is en dus gratis. 
+Een aanvulling op hun monitoringtool zou dus het gebruiken van logfiles kunnen zijn. Hier door zouden sommige problemen eerder aan het licht komen en dan kan er nog in gegrepen worden voor het te laat is. Voor het analyseren van de logs zal gebruik gemaakt worden elastic stack. Hier voor werd gekozen omdat het alle tools bevat om van logs naar grafieken te gaan. Een andere reden is dat het open source is en dus gratis. 
 
-Elastic stack bestaat uit drie elementen: logstash, elasticsearch en kibana. Deze drie elementen werken zeer goed samen en vormen zo elastic stack. Elastic stack heeft nu ook enkele uitbreiding op naast de drie hoofd elementen, er zal ook bekeken worden welke nuttig kunnen zijn voor dit onderzoek.
+Elastic stack bestaat uit drie core elementen: logstash, elasticsearch en kibana. Deze drie elementen werken zeer goed samen en vormen zo elastic stack. Elastic stack heeft nu ook enkele uitbreiding naast de drie hoofd elementen, er zal ook bekeken worden welke nuttig kunnen zijn voor dit onderzoek.
+Elk van de deze programma's is geschreven in java en beschikt over uitgebreide documentatie **bron**. Ook beschikken ze bij elastic over een zeer actief forum **link** waar zeer snel antwoord komt op probelen of vragen. Binnen de elasticstack wordt gebruik gemaakt van zelf ontwikkelde talen. Deze beschikken over de nodige documentatie via de elastic site. Helaas zijn er op dit moment amper stukken voorbeeldcode te vinden.
+De oorzaak hiervoor is dat de elastic stack nog volop aan het groeien is. Zo is er een sprong gemaakt van versie 3 naar versie 5 waar heel wat basis functionaliteiten gewijzigd zijn. In deze paper zal gewerkt worden met versie 5.2.
 
+Dit zijn de vragen waarvoor getracht zal worden een antwoord te vinden in deze paper:
 Wat zijn de gevolgen van elastic stack op korte en lange termijn voor de server?
 
 Biedt elastic stack echt een meer waarde voor de server beheerder?
@@ -38,9 +41,8 @@ Is het mogelijk om zelf een extra monitoringtool te maken met behulp van elastic
 
 De rest van deze bachelorproef is als volgt opgebouwd:
 
-In Hoofdstuk~\ref{ch:methodologie} wordt de werking van elke component van elastic stack toegelicht. Er zal ook telkens onmiddelijk gekeken worden welke mogelijkheden dit met zich mee brengt voor Oxya. Op het einde zal de volledige elastic stack bekeken worden en kijken wat deze van voor- en nadelen met zich mee brengt.
+In Hoofdstukken \hyperref[ch:logstash]{\ref{ch:logstash}},\hyperref[ch:elasticsearch]{\ref{ch:elasticsearch}} en \hyperref[ch:kibana]{\ref{ch:kibana}} wordt de werking van elke core component van elastic stack toegelicht. Er zal ook telkens onmiddelijk gekeken worden welke mogelijkheden dit met zich mee brengt voor Oxya. Op het einde zal de volledige elastic stack bekeken worden en kijken wat deze van voor- en nadelen met zich mee brengt.
 
 %% TODO: Vul hier aan voor je eigen hoofstukken, één of twee zinnen per hoofdstuk
 
-In Hoofdstuk~\ref{ch:conclusie}, tenslotte, wordt de conclusie gegeven en een antwoord geformuleerd op de onderzoeksvragen. Daarbij wordt ook een aanzet gegeven voor toekomstig onderzoek binnen dit domein. Ook zal de mening van Oxya gevraagd worden omtrend de bruikbaarheid van elastic stack voor monitoring. 
-
+In Hoofdstuk \hyperref[ch:logstash]{\ref{ch:conclusie}}, tenslotte, wordt de conclusie gegeven en een antwoord geformuleerd op de onderzoeksvragen. Daarbij wordt ook een aanzet gegeven voor toekomstig onderzoek binnen dit domein. Ook zal de mening van Oxya gevraagd worden omtrend de bruikbaarheid van elastic stack voor monitoring. 
