@@ -5,7 +5,28 @@
 \chapter{Elasticsearch}
 \label{ch:elasticsearch}
 
-
 \section{Introductie}
-\section{search}
-\section{alerts}
+\label{sec:introductie}
+
+Elasticsearch is het hart van elastic stack. Het is een zoek algoritme gebasseerd op indices. Voor een kleine hoeveelheid data wordt beter iets anders gebruikt aangezien de start tijd van elasticsearch} relatief lang is.
+Maar voor grote hoeveelheden data is het zeer geschikt. Na de starttijd kan zo goed als live de zoekopdrachten volbrengen. 
+Omwille van de goeie schaalbaarheid wordt het reeds bij enkele bedrijven gebruikt die met heel veel data af te rekenen krijgen **bron**.
+
+Om elasticsearch optimaal te laten werken is het zeer belangrijk om juist om te gaan met indices. Als voorbeeld gezocht wil worden op een bepaalde dag van de week dan kan hiervoor best een afzonderlijk field voorzien worden. 
+Daarom is het dus erg belangrijk om werk te maken van het schrijven van een goede config file voor logstash.
+
+Het gebruik van de zelf ontwikkelde taal is niet eenvoudig en daarom zal in \hyperref[sec:search]{\ref{sec:search}} enkele basis mogelijkheden toegelicht worden.
+De commando's kunnen via de console in kibana gerund worden of via de commandline. In de rest van de paper zullen de stukken code gebruikt worden voor de in de console van kibana.
+Indien gewenst kunnen deze stukken code ook gebruikt worden in de commandline maar dan wel in combinatie met curl.
+
+\section{Search}
+\label{sec:search}
+
+Komt nog
+
+\section{Watcher}
+\lable{sec:watcher}
+
+Watcher is één van de tools die tot de elastic stack behoren. Het maakt het mogelijk om in bepaalde gevallen een alert te sturen.
+Het bestaat uit vier delen: planning, zoekopdracht, conditie en actie. Dit is dus ook een erg belangrijke tool voor het monitoren.
+
