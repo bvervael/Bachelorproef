@@ -5,31 +5,29 @@
 \chapter{Inleiding}
 \label{ch:inleiding}
 
-De inleiding moet de lezer alle nodige informatie verschaffen om het onderwerp te begrijpen zonder nog externe werken te moeten raadplegen \autocite{Pollefliet2011}. Dit is een doorlopende tekst die gebaseerd is op al wat je over het onderwerp gelezen hebt (literatuuronderzoek).
 
-Je verwijst bij elke bewering die je doet, vakterm die je introduceert, enz. naar je bronnen. In \LaTeX{} kan dat met het commando \texttt{$\backslash${textcite\{\}}} of \texttt{$\backslash${autocite\{\}}}. Als argument van het commando geef je de ``sleutel'' van een ``record'' in een bibliografische databank in het Bib\TeX{}-formaat (een tekstbestand). Als je expliciet naar de auteur verwijst in de zin, gebruik je \texttt{$\backslash${}textcite\{\}}.
-Soms wil je de auteur niet expliciet vernoemen, dan gebruik je \texttt{$\backslash${}autocite\{\}}. Hieronder een voorbeeld van elk.
+\textcite{Knuth1998}
+\autocite{Creeger2009}
 
-\textcite{Knuth1998} schreef een van de standaardwerken over sorteer- en zoekalgoritmen. Experten zijn het erover eens dat cloud computing een interessante opportuniteit vormen, zowel voor gebruikers als voor dienstverleners op vlak van informatietechnologie~\autocite{Creeger2009}.
+\section{De opdrachtgever, Oxya}
+\label{sec:de-opdrachtgever}
 
-\section{Stand van zaken}
-\label{sec:stand-van-zaken}
-
-%% TODO: deze sectie (die je kan opsplitsen in verschillende secties) bevat je
-%% literatuurstudie. Vergeet niet telkens je bronnen te vermelden!
-
-\lipsum[7-20]
+Oxya is een internationaal bedrijf met ondermeer een vesteging in Kortrijk. Het bedrijf houdt zich enkel en alleen bezig met het hosten van SAP systemen. Dit is voornamelijk voor grote bedrijven die erg afhankelijk zijn van hun ERP pakket. Als de servers down zijn kan het voorkomen dat een heel bedrijf stil ligt tot de servers terug werken.
 
 \section{Probleemstelling en Onderzoeksvragen}
 \label{sec:onderzoeksvragen}
 
-%% TODO:
-%% Uit je probleemstelling moet duidelijk zijn dat je onderzoek een meerwaarde
-%% heeft voor een concrete doelgroep (bv. een bedrijf).
-%%
-%% Wees zo concreet mogelijk bij het formuleren van je
-%% onderzoeksvra(a)g(en). Een onderzoeksvraag is trouwens iets waar nog
-%% niemand op dit moment een antwoord heeft (voor zover je kan nagaan).
+Momenteel werken ze bij Oxya met statische monitoringtools. Als een disk voor 95\% vol staat zal een alert ontstaan. Het probleem hier is dat deze alerts vaak te laat onstaan. Als het CPU gebruik plots logaritmisch begint te stijgen zal het alert pas ontstaan enkele seconden voor de server op 100\% zal draaien. 
+ 
+Een aanvulling op hun monitoringtool zou dus het gebruiken van logfiles kunnen zijn. Hier door zouden sommige problemen eerder aan het licht komen en dan kan er nog in gegrepen worden voor het te laat is. Voor het analyseren van de logs zal gebruik gemaakt worden elastic stack. Hier voor werd gekozen omdat het alle tools bevat om van logs naar grafieken te gaan. Een andere reden is dat het open-source is en dus gratis. 
+
+Elastic stack bestaat uit drie elementen: logstash, elasticsearch en kibana. Deze drie elementen werken zeer goed samen en vormen zo elastic stack. Elastic stack heeft nu ook enkele uitbreiding op naast de drie hoofd elementen, er zal ook bekeken worden welke nuttig kunnen zijn voor dit onderzoek.
+
+Wat zijn de gevolgen van elastic stack op korte en lange termijn voor de server?
+
+Biedt elastic stack echt een meer waarde voor de server beheerder?
+
+Is het mogelijk om zelf een extra monitoringtool te maken met behulp van elastic stack?
 
 \section{Opzet van deze bachelorproef}
 \label{sec:opzet-bachelorproef}
@@ -40,9 +38,9 @@ Soms wil je de auteur niet expliciet vernoemen, dan gebruik je \texttt{$\backsla
 
 De rest van deze bachelorproef is als volgt opgebouwd:
 
-In Hoofdstuk~\ref{ch:methodologie} wordt de methodologie toegelicht en worden de gebruikte onderzoekstechnieken besproken om een antwoord te kunnen formuleren op de onderzoeksvragen.
+In Hoofdstuk~\ref{ch:methodologie} wordt de werking van elke component van elastic stack toegelicht. Er zal ook telkens onmiddelijk gekeken worden welke mogelijkheden dit met zich mee brengt voor Oxya. Op het einde zal de volledige elastic stack bekeken worden en kijken wat deze van voor- en nadelen met zich mee brengt.
 
 %% TODO: Vul hier aan voor je eigen hoofstukken, één of twee zinnen per hoofdstuk
 
-In Hoofdstuk~\ref{ch:conclusie}, tenslotte, wordt de conclusie gegeven en een antwoord geformuleerd op de onderzoeksvragen. Daarbij wordt ook een aanzet gegeven voor toekomstig onderzoek binnen dit domein.
+In Hoofdstuk~\ref{ch:conclusie}, tenslotte, wordt de conclusie gegeven en een antwoord geformuleerd op de onderzoeksvragen. Daarbij wordt ook een aanzet gegeven voor toekomstig onderzoek binnen dit domein. Ook zal de mening van Oxya gevraagd worden omtrend de bruikbaarheid van elastic stack voor monitoring. 
 

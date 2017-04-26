@@ -1,0 +1,230 @@
+%%=============================================================================
+%% Logstash
+%%=============================================================================
+
+\chapter{Logstash}
+\label{ch:logstash}
+
+
+\section{Introductie}
+\label{sec:logstash-introductie}
+
+Logstash is een open source data verzamel programma. Het werkt real-time en zal dus reageren van zodra er nieuwe data beschikbaar is.  Logstash beschik over de mogelijkheid de data te normalizeren.  Het kan data vanuit verschillende bronnen tergelijk inlezen en verwerken. 
+Het is ontwikkeld om enkel log files te lezen als input maar de mogelijkheden nu gaan veel verder.
+Deze paper zal zich beperken tot het gebruik voor log files. 
+De kracht van logstash zit hem erin dat het real-time werkt. Dit is zeer belangrijk voor de opzet van deze paper aangezien het de bedoeling is dat er onmiddellijk een alert ontstaat van zodra is misloopt. Het beschikt ook over enkele functies om de data te verwerken voorbeelden hiervan zijn: mix, match,filter, … .  
+Het beschikt ook over meer dan 200 plugins en een grote community.
+Het doel van logstash is voornamelijk het normalizeren van data. Dit is zeer belangrijk voor later in elasticsearch. Elke lijn uit een log file zal gematched worden aan een patroon. Dit patroon zal zo enkele vaste indeces vast leggen waar later mee gewerkt zal worden.
+Al deze regels worden vast gelegd in een config file. Per type log zal dus een nieuwe config file geschreven moeten worden. Voor deze paper zal het beperkt worden tot de syslogs van een linux machine en de logs van een oracle database.
+Logstash werkt in drie fases: input,filter,output. Bij input zal mee gegeven worden welke files juist in de gaten gehouden zullen worden. Bij de filter zal de data verwerkt worden, dit gebeurd lijn per lijn. Elke lijn wordt beschouwd al een nieuw element. In de filter gebeuren de nodige bewerkingen op een lijn om zo te matchen met enkele indices. Deze indices zullen dan samen gebracht worden en vormen per lijn een JSON element. In het output deel wordt beslist wat met de JSON elementen moet gebeuren.  
+Dit is enkel een korte beschrijving val de drie delen maar ze beschikken over nog enkele mogelijkheden. Enkele van deze extra mogelijkheden zullen nog aan bod komen wat verder in deze paper. 
+Logstash draait standaard op poort 9600. Maar van zodra meer dan één config file gebruikt wordt stijgt het poort nummer telkens met 1. 
+
+\section{config files}
+\label{sec:logstash-config-files}
+
+Voor elk type logs moet een config file ontwikkeld worden. Deze config files moeten aan een vast patroon voldoen. Dit vast patroon bestaat uit drie delen en deze zullen hieronder uitgediept worden. 
+Logstash beschikt reeds over heel wat functionaliteiten en deze kunnen hier niet allemaal besproken worden. Er zal beperkt worden tot de meest relevante functionaliteiten met betrekking tot dit onderzoek. Een config file voldoet aan de normale filename conventies en heeft de extensie “.conf”.
+Logstash heeft ook enkele voor geprogrammeerde patronen te gebruiken zijn binnen de volledige config file \autocite{logstashpatterns}. 
+
+
+\section{Input}
+\label{sec:logstash-input}
+
+In \hyperref[subsec:lokaal]{\ref{subsec:lokaal}} en \hyperref[subsec:beats]{\ref{subsec:beats}} zal besproken worden hoe we files kunnen inlezen. Een combinatie van input streams is mogelijk. Deze files worden normaal lijn per lijn gelezen en verwerkt. Indien dit niet gewenst is kan dit aangepast worden naar wens. Dit zal besproken worden in \hyperref[subsec:multiline]{\ref{subsec:multiline}}.
+
+\subsection{Lokaal}
+\label{subsec:lokaal}
+
+Het simpelste is als een file lokaal te vinden is. Dit houd dus in dat  de file op dezelfde (virtuele) machine te vinden is als waarop de logstash geïnstalleerd werd. Er dient dan wel gezorgt te worden voor een account die read rechten heeft voor deze file. Als meerdere files aan hetzelfde format voldoen kunnen deze allemaal samen ingelezen worden.
+Het is belangrijk dat het absolut path gegeven word. 
+\lstset{escapechar=@,style=customc}        
+\begin{lstlisting}[frame=single]  
+input {
+	file {
+		path => "/var/log/messages"
+		path => "/var/log/auth.log"
+		path => "/var/log/kern.log"
+		path => "/var/log/cron.log"
+	}
+}
+\end{lstlisting}
+
+\subsection{Beats}
+\label{subsec:beats}
+
+Beats is een programma die nu ook tot de elastic stack behoort. Het wordt niet beschouwd als core maar eerder als tool. Het is een licht programma die nieuwe data uit een file real-time via het netwerk naar een andere machine kan sturen. Dit gebeurd via een open netwerk poort op die andere machine waarop logstash staat. Logstash is op hetzelfde moment aan het luisteren naar die poort en kan zo de nieuwe data verkrijgen en dan ook verwerken.
+Ook moet voor de configuratie van de beats het ip adres en de open poort van de andere machine gekent zijn. . In het volgend voorbeeld zal hiervoor de nog niet gebruikte poort  5043 gebruikt worden. En het ip adres is 192.168.0.100.
+\begin{lstlisting}[frame=single]  
+input {
+	beats {
+		port => "5043"
+	}
+}
+
+\end{lstlisting}
+Dit is het stuk code die in de config file hoort op de machine waarop logstash staat.
+\begin{lstlisting}[frame=single]  
+filebeat.prospectors:
+- input_type: log
+	paths:
+		- /var/log/messages 
+		
+output.logstash:
+	hosts: ["192.168.0.100:5043"]
+\end{lstlisting}
+Dit is het stuk code die in de beats config file hoort .
+
+
+\subsection{Multiline}
+\label{subsec:multiline}
+
+Multiline is een plugin en moet dus nog geïnstalleerd worden als deze voor de eerste maal gebruikt wordt. Als u zich in de folder van logstash bevindt is het commando hiervoor:
+
+\begin{lstlisting}[frame=single]  
+bin/logstash-plugin install logstash-filter-multiline
+\end{lstlisting}
+
+Multiline kan ervoor zorgen dat een file niet lijn per lijn gelezen wordt maar dat hij bepaalde lijnen samen in leest. Dit is nodig voor onze oracle logs, soms bestaat één message uit meerdere lijnen.
+Er kan een patroon opgegeven worden waaraan lijnen wel of net niet moeten voldoen om afzonderlijk te kunnen bestaan. Er kan mee gegeven worden wat er moet gebeuren met een lijne die niet aan de wensen voldoet. Als deze aan de lijn er voor of erna toegevoegd moet worden. 
+Een probleem die opdook was dat logstash nooit de laatste lijn las. Dit was omdat lijnen die niet alleen konden bestaan aan de lijn ervoor toegevoegd werden. Logstash kon dus pas een message inlezen als hij zeker was dat ze volledig was. Omdat de log message altijd in één keer geschreven wordt kan ervanuit gegaan worden dat de message compleet is. Daarom werd een auto-flush geïmplementeerd die als er binnen de seconde geen nieuwe lijn komt de message als compleet zal beschouwen.
+
+\lstset{escapechar=@,style=customc}  
+\begin{lstlisting}[frame=single]  
+input {
+	...
+	codec => multiline {
+		pattern => "%{DAY} %{MONTH} %{MONTHDAY} %{TIME} %{YEAR}"
+		negate => true
+		what => "previous"
+		auto_flush_interval => 1
+	}
+}
+\end{lstlisting}
+
+In pattern wordt het gewenste patroon geplaats. Dit doormiddel van een regex of de voorgeprogrammeerde patronen.  In negate wordt aangegeven als het patroon wel of net niet moet matchen. De what geeft hier aan dat de lijnen die niet voldoen aan het patroon aan de vorige lijn toegevoegd zullen worden. En de auto-flush staat op één seconde om de delay te beperkten.
+
+
+\section{Filter}
+\label{sec:filter}
+
+Hier gebeuren alle bewerkingen en zal bepaald worden wat in de JSON gaat en wat niet. In de filter is het de bedoeling dat de file zoveel mogelijk genormaliseerd wordt. Een log lijn wordt eerst volledig ingelezen in een field  genaamd “message”. Van daaruit is het de bedoeling dat vast voorkomende stukken tekst eruit gehaald worden en in een eigen veld geplaatst worden, indien deze later gebruikt willen worden.  Om deze speciefieke velden te maken zijn enkele mogelijkheden deze zullen besproken worden in \hyperref[subsec:patroon]{\ref{subsec:patroon}} en \hyperref[subsec:zoeken]{\ref{subsec:zoeken}}. Werken met de tijd is niet altijd even simpel en zal daarom afzonderlijk besproken worden in \hyperref[subsec:timestamp]{\ref{subsec:timestamp}}. Er zal afgesloten worden in \hyperref[subsec:overige]{\ref{subsec:overige}} met nog enkele nuttige commando’s. 
+Hou er rekening mee dat elasticsearch zal zoeken aan de hand van de fields die hier gemaakt worden. De juiste field keuzes kunnen dus een grote invloed hebben op de zoeksnelheid.
+
+
+\subsection{Patroon}
+\label{subsec:patroon}
+
+Hier gebeuren alle bewerkingen en zal bepaald worden wat in de JSON gaat en wat niet. In de filter is het de bedoeling dat de file zoveel mogelijk genormaliseerd wordt. Een log lijn wordt eerst volledig ingelezen in een field  genaamd “message”. Van daaruit is het de bedoeling dat vast voorkomende stukken tekst eruit gehaald worden en in een eigen veld geplaatst worden, indien deze later gebruikt willen worden.  Om deze speciefieke velden te maken zijn enkele mogelijkheden deze zullen besproken worden in \hyperref[subsec:patroon]{\ref{subsec:patroon}} en \hyperref[subsec:zoeken]{\ref{subsec:zoeken}}. Werken met de tijd is niet altijd even simpel en zal daarom afzonderlijk besproken worden in \hyperref[subsec:timestamp]{\ref{subsec:timestamp}}. Er zal afgesloten worden in \hyperref[subsec:overige]{\ref{subsec:overige}} met nog enkele nuttige commando’s. 
+Hou er rekening mee dat elasticsearch zal zoeken aan de hand van de fields die hier gemaakt worden. De juiste field keuzes kunnen dus een grote invloed hebben op de zoeksnelheid.
+
+\lstset{escapechar=@,style=customc}  
+\begin{lstlisting}[frame=single]  
+filter {
+	grok {
+		match {
+			"message" => "%{MONTH:month} +%{MONTHDAY:monthday} %{TIME:time} %{NOTSPACE:user}(?<log_message>.*$)"	 
+		}
+	}
+}
+\end{lstlisting}
+
+\subsection{Zoeken}
+\label{subsec:zoeken}
+
+Sommige programma’s hebben een eigen type errors of messages. Deze message zijn opgebouwd op een vast patroon ook. Dit maakt het mogelijk om met logstash te zoeken naar dit patroon en op die manier deze messages in een field te steken. De error messages van oracle kunnen hier als voorbeeld dienen. Deze message zijn opgebouwd uit “ORA-“ gevolgd door vijd cijfers. Er zal dus gezocht worden als dit patroon in de message te vinden is en als dat het geval is zal deze in een field geplaatst worden.
+
+\lstset{escapechar=@,style=customc}  
+\begin{lstlisting}[frame=single]  
+filter {
+	if [message] =~ /ORA-/ {
+		grok {
+			match => [ "message","(?<ORA->ORA-[0-9]*)" ]
+		}  
+	}
+}
+\end{lstlisting}
+
+\subsection{Timestamp}
+\label{subsec:timestamp}
+
+Logstash zal altijd als standaard timestamp het moment nemen waarop hij de data verwerkt. Als dit live gelezen wordt is dit goed maar als er ook logs van vroeger willen inladen worden geeft dit problemen.  Daarom zal meestal de tijdsaanduiding in het begin van een log lijn gebruikt worden als timestamp. Als voorbeeld het jaar niet gegeven werd zal logstash automatisch het jaar nemen waarin het zich bevindt. Er wordt nu vanuit gegaan dat de tijdsaanduiding gecapteerd kan worden aan de hand van het patroon die uitgelegd werd in \hyperref[subsec:patroon]{\ref{subsec:patroon}}. Eerst wordt een tijdelijk field gemaakt met alleen de tijdsaanduidingen. Daarna kan de tijdzone gekozen worden en de timestamp gelijk gezet worden met ons tijdelijk field. Er moet wel mee gegeven worden hoe het tijdelijk field opgebouwd is. 
+
+\lstset{escapechar=@,style=customc}  
+\begin{lstlisting}[frame=single]  
+filter {
+	...
+	mutate {
+		add_field => {
+			"timestamp" => "%{year} %{month} %{monthday} %{time}"
+		}
+	}
+
+	date {
+		timezone => "CET"
+		match => [ "timestamp","yyyy MMM dd HH:mm:ss" ]  
+	}
+}
+\end{lstlisting}
+
+\subsection{Overige}
+\label{subsec:overige}
+
+Enkele nuttige commado’s die nog niet aan bod kwamen zijn het kopiëren en het verwijderen van fields. Zo kan het voorbeeld handig zijn om message op het einde te vervangen door de log message alleen zonder alle andere info. Deze info zit dan toch al in andere field en zo kan de message makkelijker leesbaar gemaakt worden. Fields die gemaakt werden voor tijdelijk gebruik kunnen best verwijderen worden. Dit om de simpele reden dat ze enkel extra geheugen in nemen en toch tot niets dienen.
+
+\section{Output}
+Voor de output zijn weer heel wat mogelijkheden. In deze paper zullen er slechts drie aanbod komen. Hier zal dus beschreven worden wat er moet gebeuren met de JSON elementen.
+
+\subsection{Standaard output}
+\label{subsec:standaardoutput}
+
+Dit is vooral nuttig voor tijdens  de testfase. Als logstash dan gestart wordt vanuit de commandline kan de output live gevolgd worden. Dit heeft als voordeel dat onmiddellijk gezien kan worden als het werkt zonder errors. De code hiervoor is dan ook heel simpel.
+
+\lstset{escapechar=@,style=customc}  
+\begin{lstlisting}[frame=single]  
+output {
+	stdout {
+		codec => rubydebug 
+	}
+}
+\end{lstlisting}
+
+\subsection{Elasticsearch}
+\label{subsec:elasticsearch}
+
+Door het samenbrengen van deze programma’s binnen de elastic stack is het zeer makkelijk om de data door te geven. Zo kan in enkele lijnen duidelijk gemaakt worden dat alle JSON elementen naar elasticsearch moeten. Om elasticsearch efficiënt te laten werken wordt een index verwacht. Deze index wordt dan toegevoegd aan elk JSON element die hier gegenereerd werd. Aangeraden wordt om in eerste instantie het type logs te vermelden in de index voorbeeld: linux, oracle, windows, \dots. Als extra kan ook een combinatie gemaakt worden met de servernaam om zo duidelijk te maken waar de logs vandaan komen. 
+Via hosts kan duidelijk  gemaakt worden waar elasticsearch juist aan het draaien is. In dit voorbeeld draait elasticsearch lokaal maar er kan ook een ip adres opgegeven worden.
+
+\lstset{escapechar=@,style=customc}  
+\begin{lstlisting}[frame=single]  
+output {
+	elasticsearch {
+		hosts => ["localhost:9200"]
+		index => "linux_citts"
+	}
+}
+\end{lstlisting}
+
+\subsection{Alerts}
+\label{subsec:alerts}
+
+Het is ook mogelijk alerting te doen binnen logstash. In deze paper zal dit gebruikt worden om te alerten op belangrijke  “ORA” errors. Als één van de errors voorkomt wordt deze in het field “ORA-” geplaatst (zie stap \hyperref[subsec:zoeken]{\ref{subsec:zoeken}}). Dit voorbeeld zal kijken als er zich geen invalid state voordoet. De gekende errors voor invalide state zijn: ORA-01502 en ORA-20000. Als dus één van deze errors zich voordoet zal een email met een alert gestuurd worden. In de body wordt enige duiding gegeven rond waar en wanneer de error zich voor deed.
+
+\lstset{escapechar=@,style=customc}  
+\begin{lstlisting}[frame=single]
+output {
+	if "ORA-01502" == [ORA-] or "ORA-20000" == [ORA-] {
+		email{
+			subject => "Invalid State"
+			to => "bvervaele@oxya.com"
+			body => "Host: %{host}\n\nTime: %{@timestamp}\n\nLine of the error: %{message}"
+			address => "smtp.gmail.com"
+			port => 587
+			username => "logserviceoxya@gmail.com"
+			password => "oxya1234"
+			use_tls => true
+		}
+	}	 
+}
+
+\end{lstlisting}

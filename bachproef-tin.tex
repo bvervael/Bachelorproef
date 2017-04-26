@@ -5,6 +5,24 @@
 
 \documentclass[fleqn,a4paper,12pt]{book}
 
+\usepackage{listings}
+\usepackage{color}
+
+\lstdefinestyle{customc}{
+	backgroundcolor=\color{lightgray},
+	belowcaptionskip=1\baselineskip,
+	breaklines=true,
+	frame=L,
+	xleftmargin=\parindent,
+	language=C,
+	showstringspaces=false,
+	basicstyle=\footnotesize\ttfamily,
+	keywordstyle=\bfseries\color{green!40!black},
+	commentstyle=\itshape\color{purple!40!black},
+	identifierstyle=\color{blue},
+	stringstyle=\color{orange},
+}
+
 \input{structure}
 
 %%---------- Documenteigenschappen --------------------------------------------
@@ -23,7 +41,7 @@
 % Indien je bachelorproef in opdracht van/in samenwerking met een bedrijf of
 % externe organisatie geschreven is, geef je hier de naam. Zoniet laat je dit
 % zoals het is.
-\newcommand{\instelling}{---}
+\newcommand{\instelling}{Oxya}
 
 % De titel van het rapport/bachelorproef
 \newcommand{\titel}{Log monitoring aan de hand van Elastic Stack
@@ -74,15 +92,12 @@
 %%---------- Kern -------------------------------------------------------------
 
 \input{inleiding}
-\input{methodologie}
 
-%% Voeg hier je eigen hoofdstukken toe die de ``corpus'' van je bachelorproef
-%% vormen. De structuur en titels hangen af van je eigen onderzoek. Je kan bv.
-%% elke fase in je onderzoek in een apart hoofdstuk bespreken.
 
-%\input{}
-%\input{}
-%...
+\input{logstash}
+\input{elasticsearch}
+\input{kibana}
+\input{elasticstack}
 
 \input{conclusie}
 
