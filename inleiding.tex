@@ -5,32 +5,57 @@
 \chapter{Inleiding}
 \label{ch:inleiding}
 
-
-\textcite{Knuth1998}
-\autocite{Creeger2009}
-
 \section{De opdrachtgever, Oxya}
 \label{sec:de-opdrachtgever}
 
 Oxya is een internationaal bedrijf met ondermeer een vesteging in Kortrijk. Het bedrijf houdt zich enkel en alleen bezig met het hosten van SAP systemen. Dit is voornamelijk voor grote bedrijven die erg afhankelijk zijn van hun ERP pakket. Als de servers down zijn kan het voorkomen dat een heel bedrijf stil ligt tot de servers terug werken.
 
+% BVV: Wat is SAP, ERP? Wat omstandiger uitleggen. Iemand die niet vertrouwd is met het onderwerp of het onderzoeksdomein moet alles begrijpen dat je schrijft.
+% BVV: Probeer waar mogelijk Nederlandse termen te gebruiken, bv. vermijd "down zijn"
+
 \section{Probleemstelling en Onderzoeksvragen}
 \label{sec:onderzoeksvragen}
 
 Momenteel werken ze bij Oxya met statische monitoringtools. Als een disk voor 95\% vol staat zal een alert ontstaan. Het probleem hier is dat deze alerts vaak te laat onstaan. Als het CPU gebruik plots logaritmisch begint te stijgen zal het alert pas ontstaan enkele seconden voor de server op 100\% zal draaien. 
- 
+
+% BVV: Je valt hier meteen met de deur in huis. Misschien moet je iets duidelijker (maar zo kort mogelijk) aangeven wat een monitoringsysteem is en hoe dit bij Oxya gebruikt wordt. Geef wat meer uitleg over de huidige situatie en de pijnpunten.
+% BVV: Wat wordt er verstaan onder een "statische" monitoringtool?
+% BVV: Logaritmisch is trager dan lineair. Wellicht bedoel je exponentieel?
+% "voor de server op 100\% zal draaien" -> is een verwoording die je eerder verwacht bij cpu-gebruik. bv.: "... voordat de schijfruimte van de server helemaal vol raakt, met alle gevolgen van dien."
+
 Een aanvulling op hun monitoringtool zou dus het gebruiken van logfiles kunnen zijn. Hier door zouden sommige problemen eerder aan het licht komen en dan kan er nog in gegrepen worden voor het te laat is. Voor het analyseren van de logs zal gebruik gemaakt worden elastic stack. Hier voor werd gekozen omdat het alle tools bevat om van logs naar grafieken te gaan. Een andere reden is dat het open source is en dus gratis. 
 
-Elastic stack bestaat uit drie core elementen: logstash, elasticsearch en kibana. Deze drie elementen werken zeer goed samen en vormen zo elastic stack. Elastic stack heeft nu ook enkele uitbreiding naast de drie hoofd elementen, er zal ook bekeken worden welke nuttig kunnen zijn voor dit onderzoek.
+% BVV: "dus" duidt op een redenering die volgt uit wat vooraf gaat. Voor de lezer is het niet zo evident dat logfiles gebruiken een denkpiste is als "statische" monitoringtools
+% BVV: de keuze van een tool zou je toch beter moeten motiveren. Zijn er geen andere monitoring tools die ook de functionaliteiten hebben die je nodig hebt? Ik zou hier schrijven dat de keuze voor de Elastic Stack in het bijzonder gestuurd wordt door Oxya, dat het op hun radar verschenen is als een mogelijke oplossing voor hun problemen, en dat jouw opdracht is om uit te zoeken of dat klopt.
+
+Elastic stack bestaat uit drie core elementen: logstash, elasticsearch en kibana.
+% BVV: Merk- en productnamen schrijf je met hoofdletters
+Deze drie elementen werken zeer goed samen en vormen zo elastic stack. Elastic stack heeft nu ook enkele uitbreiding naast de drie hoofd elementen, er zal ook bekeken worden welke nuttig kunnen zijn voor dit onderzoek.
+% BVV: herformuleer deze zin, en licht ook toe over welke uitbreiding[en] het precies gaat
 Elk van de deze programma's is geschreven in java en beschikt over uitgebreide documentatie **bron**. Ook beschikken ze bij elastic over een zeer actief forum **link** waar zeer snel antwoord komt op probelen of vragen. Binnen de elasticstack wordt gebruik gemaakt van zelf ontwikkelde talen. Deze beschikken over de nodige documentatie via de elastic site. Helaas zijn er op dit moment amper stukken voorbeeldcode te vinden.
 De oorzaak hiervoor is dat de elastic stack nog volop aan het groeien is. Zo is er een sprong gemaakt van versie 3 naar versie 5 waar heel wat basis functionaliteiten gewijzigd zijn. In deze paper zal gewerkt worden met versie 5.2.
+% BVV: In NL schrijf je samengestelde begrippen aan elkaar => basisfunctionaliteiten
 
 Dit zijn de vragen waarvoor getracht zal worden een antwoord te vinden in deze paper:
-Wat zijn de gevolgen van elastic stack op korte en lange termijn voor de server?
+% BVV: dit is geen paper, maar een bachelorproef
 
-Biedt elastic stack echt een meer waarde voor de server beheerder?
+\begin{itemize}
+  \item Wat zijn de gevolgen van elastic stack op korte en lange termijn voor de server?
+  \item Biedt elastic stack echt een meer waarde voor de server beheerder?
+  \item Is het mogelijk om zelf een extra monitoringtool te maken met behulp van elastic stack?
+\end{itemize}
 
-Is het mogelijk om zelf een extra monitoringtool te maken met behulp van elastic stack?
+% BVV: Deze onderzoeksvragen zijn nog erg vaag. Is de onderzoeksvraag niet eerder "Biedt de Elastic Stack een oplossing voor de uitdagingen van Oxya?", evt. aangevuld met "Hoe moet Elastic Stack geconfigureerd worden om de requirements van Oxya zo goed mogelijk te benaderen" en "Welke aanpassingen of aanvullingen moeten er nog aangebracht worden aan Elastick Stack (bijvoorbeeld in de vorm van plugins) om eventuele ontbrekende functionaliteit aan te vullen". Is dit niet veel concreter?
+% BVV: "gevolgen op korte en lange termijn voor de server" -> welke server? over wat voor gevolgen heb je het hier dan?
+% BVV: "meer waarde voor de server beheerder" -> opnieuw 2 begrippen die aan elkaar geschreven moeten worden. Ook: Dit is zo abstract en algemeen, je gaat deze vraag zoals je ze hier stelt nooit kunnen beantwoorden. Jij doet immers een case-study, voor één situatie, geen uitgebreid kwantitatief onderzoek. "De serverbeheerder" is niet jouw doelgroep, maar wel Oxya.
+
+% BVV: hier hoort een sectie over de methodologie thuis. Op welke manier ga je concreet de onderzoeksvraag beantwoorden? Ik voorzie alvast volgende stappen:
+% - Requirements-analyse in samenwerking met de "stakeholders" bij Oxya (je co-promotor in de eerste plaats, maar misschien heb je ook met anderen gepraat), oplijsten en structureren van requirements (bv. ahv MoSCoW-methode)
+% - Literatuurstudie om te leren werken met de Elastic Stack en de bestaande functionaliteit te kunnen koppelen aan de gevraagde requirements
+% - Opzetten van een proof-of-concept dat aantoont dat de belangrijkste requirements kunnen voldaan worden met de Elastic Stack
+% - Eventueel proof-of-concept voor plugin(s) om aan te tonen dat ontbrekende functionaliteiten nog kunnen toegevoegd worden.
+
+% Van al deze fasen moet de uitwerking aanwezig zijn in je bachelorproef. Je bespreekt dus bv. wat de requirements zijn, licht je testopstelling toe, enz.
 
 \section{Opzet van deze bachelorproef}
 \label{sec:opzet-bachelorproef}
@@ -41,8 +66,9 @@ Is het mogelijk om zelf een extra monitoringtool te maken met behulp van elastic
 
 De rest van deze bachelorproef is als volgt opgebouwd:
 
-In Hoofdstukken \hyperref[ch:logstash]{\ref{ch:logstash}},\hyperref[ch:elasticsearch]{\ref{ch:elasticsearch}} en \hyperref[ch:kibana]{\ref{ch:kibana}} wordt de werking van elke core component van elastic stack toegelicht. Er zal ook telkens onmiddelijk gekeken worden welke mogelijkheden dit met zich mee brengt voor Oxya. Op het einde zal de volledige elastic stack bekeken worden en kijken wat deze van voor- en nadelen met zich mee brengt.
+In Hoofdstukken \ref{ch:logstash}, \ref{ch:elasticsearch} en \ref{ch:kibana} wordt de werking van elke core component van elastic stack toegelicht. Er zal ook telkens onmiddelijk gekeken worden welke mogelijkheden dit met zich mee brengt voor Oxya. Op het einde zal de volledige elastic stack bekeken worden en kijken wat deze van voor- en nadelen met zich mee brengt.
+% BVV: \hyperref is hier niet nodig, LaTeX maakt \refs al vanzelf aanklikbaar
 
 %% TODO: Vul hier aan voor je eigen hoofstukken, één of twee zinnen per hoofdstuk
 
-In Hoofdstuk \hyperref[ch:logstash]{\ref{ch:conclusie}}, tenslotte, wordt de conclusie gegeven en een antwoord geformuleerd op de onderzoeksvragen. Daarbij wordt ook een aanzet gegeven voor toekomstig onderzoek binnen dit domein. Ook zal de mening van Oxya gevraagd worden omtrend de bruikbaarheid van elastic stack voor monitoring. 
+In Hoofdstuk \ref{ch:conclusie}, tenslotte, wordt de conclusie gegeven en een antwoord geformuleerd op de onderzoeksvragen. Daarbij wordt ook een aanzet gegeven voor toekomstig onderzoek binnen dit domein. Ook zal de mening van Oxya gevraagd worden omtrend de bruikbaarheid van elastic stack voor monitoring. 

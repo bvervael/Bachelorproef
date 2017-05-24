@@ -2,14 +2,22 @@
 %% Logstash
 %%=============================================================================
 
+% BVV: Ontbreekt er ook niet een overzicht van de Elastic Stack als geheel? Een afbeelding van de architectuur of de flow van informatie doorheen het systeem zou ook een meerwaarde zijn.
+
 \chapter{Logstash}
 \label{ch:logstash}
 
+% BVV: deze sectiehoofding is overbodig. De eerste paragraaf van een hoofdstuk is sowieso een inleiding. In een inleidende paragraff van een hoofstuk licht je ook toe wat er in het hoofstuk staat, waarom je het bespreekt en hoe het past binnen de rode draad van je bachelorproef, meer bepaald hoe het gerelateerd is aan het vorige en volgende hoofstuk.
 
 \section{Introductie}
 \label{sec:logstash-introductie}
 
-Logstash is een open source data verzamel programma. Het werkt real-time en zal dus reageren van zodra er nieuwe data beschikbaar is.  Logstash beschik over de mogelijkheid de data te normalizeren.  Het kan data vanuit verschillende bronnen tergelijk inlezen en verwerken. 
+% BVV: deze paragraaf lijkt nog niet af, maar een samenraapsel van zaken die je zeker wilt vermelden. Ik heb het dan ook niet meer voorbij de eerste zinnen in detail doorgenomen.
+
+Logstash is een open source data verzamel programma. Het werkt real-time en zal dus reageren van zodra er nieuwe data beschikbaar is.  Logstash beschik over de mogelijkheid de data te normalizeren. 
+% BVV: "data verzamel programma" = letterlijke vertaling uit het Engels? Gebruik een correct Nederlands woord. En het gaat toch over iets specifiekers dan "data" in het algemeen?
+% BVV: Wat betekent "normalizeren"?
+ Het kan data vanuit verschillende bronnen tergelijk inlezen en verwerken. 
 Het is ontwikkeld om enkel log files te lezen als input maar de mogelijkheden nu gaan veel verder.
 Deze paper zal zich beperken tot het gebruik voor log files. 
 De kracht van logstash zit hem erin dat het real-time werkt. Dit is zeer belangrijk voor de opzet van deze paper aangezien het de bedoeling is dat er onmiddellijk een alert ontstaat van zodra is misloopt. Het beschikt ook over enkele functies om de data te verwerken voorbeelden hiervan zijn: mix, match,filter, … .  
@@ -49,6 +57,8 @@ input {
 	}
 }
 \end{lstlisting}
+% BVV: De grijze achtergrond en de kleuren zullen de code onleesbaar maken als je dit afdrukt in zwart-wit. Je maakt de achtergrond best wit. 
+
 
 \subsection{Beats}
 \label{subsec:beats}
@@ -103,19 +113,19 @@ input {
 \end{lstlisting}
 
 In pattern wordt het gewenste patroon geplaats. Dit doormiddel van een regex of de voorgeprogrammeerde patronen.  In negate wordt aangegeven als het patroon wel of net niet moet matchen. De what geeft hier aan dat de lijnen die niet voldoen aan het patroon aan de vorige lijn toegevoegd zullen worden. En de auto-flush staat op één seconde om de delay te beperkten.
-
+% BVV: let op: Engelse termen als er Nederlandse alternatieven bestaan
 
 \section{Filter}
 \label{sec:filter}
 
-Hier gebeuren alle bewerkingen en zal bepaald worden wat in de JSON gaat en wat niet. In de filter is het de bedoeling dat de file zoveel mogelijk genormaliseerd wordt. Een log lijn wordt eerst volledig ingelezen in een field  genaamd “message”. Van daaruit is het de bedoeling dat vast voorkomende stukken tekst eruit gehaald worden en in een eigen veld geplaatst worden, indien deze later gebruikt willen worden.  Om deze speciefieke velden te maken zijn enkele mogelijkheden deze zullen besproken worden in \hyperref[subsec:patroon]{\ref{subsec:patroon}} en \hyperref[subsec:zoeken]{\ref{subsec:zoeken}}. Werken met de tijd is niet altijd even simpel en zal daarom afzonderlijk besproken worden in \hyperref[subsec:timestamp]{\ref{subsec:timestamp}}. Er zal afgesloten worden in \hyperref[subsec:overige]{\ref{subsec:overige}} met nog enkele nuttige commando’s. 
+Hier gebeuren alle bewerkingen en zal bepaald worden wat in de JSON gaat en wat niet. In de filter is het de bedoeling dat de file zoveel mogelijk genormaliseerd wordt. Een log lijn wordt eerst volledig ingelezen in een field  genaamd “message”. Van daaruit is het de bedoeling dat vast voorkomende stukken tekst eruit gehaald worden en in een eigen veld geplaatst worden, indien deze later gebruikt willen worden.  Om deze speciefieke velden te maken zijn enkele mogelijkheden deze zullen besproken worden in \ref{subsec:patroon} en \ref{subsec:zoeken}. Werken met de tijd is niet altijd even simpel en zal daarom afzonderlijk besproken worden in \ref{subsec:timestamp}. Er zal afgesloten worden in \ref{subsec:overige} met nog enkele nuttige commando’s. 
 Hou er rekening mee dat elasticsearch zal zoeken aan de hand van de fields die hier gemaakt worden. De juiste field keuzes kunnen dus een grote invloed hebben op de zoeksnelheid.
 
 
 \subsection{Patroon}
 \label{subsec:patroon}
 
-Hier gebeuren alle bewerkingen en zal bepaald worden wat in de JSON gaat en wat niet. In de filter is het de bedoeling dat de file zoveel mogelijk genormaliseerd wordt. Een log lijn wordt eerst volledig ingelezen in een field  genaamd “message”. Van daaruit is het de bedoeling dat vast voorkomende stukken tekst eruit gehaald worden en in een eigen veld geplaatst worden, indien deze later gebruikt willen worden.  Om deze speciefieke velden te maken zijn enkele mogelijkheden deze zullen besproken worden in \hyperref[subsec:patroon]{\ref{subsec:patroon}} en \hyperref[subsec:zoeken]{\ref{subsec:zoeken}}. Werken met de tijd is niet altijd even simpel en zal daarom afzonderlijk besproken worden in \hyperref[subsec:timestamp]{\ref{subsec:timestamp}}. Er zal afgesloten worden in \hyperref[subsec:overige]{\ref{subsec:overige}} met nog enkele nuttige commando’s. 
+Hier gebeuren alle bewerkingen en zal bepaald worden wat in de JSON gaat en wat niet. In de filter is het de bedoeling dat de file zoveel mogelijk genormaliseerd wordt. Een log lijn wordt eerst volledig ingelezen in een field  genaamd “message”. Van daaruit is het de bedoeling dat vast voorkomende stukken tekst eruit gehaald worden en in een eigen veld geplaatst worden, indien deze later gebruikt willen worden.  Om deze speciefieke velden te maken zijn enkele mogelijkheden deze zullen besproken worden in subsec:patroon} en \ref{subsec:zoeken}. Werken met de tijd is niet altijd even simpel en zal daarom afzonderlijk besproken worden in \ref{subsec:timestamp}. Er zal afgesloten worden in \ref{subsec:overige} met nog enkele nuttige commando’s. 
 Hou er rekening mee dat elasticsearch zal zoeken aan de hand van de fields die hier gemaakt worden. De juiste field keuzes kunnen dus een grote invloed hebben op de zoeksnelheid.
 
 \lstset{escapechar=@,style=customc}  
@@ -148,7 +158,7 @@ filter {
 \subsection{Timestamp}
 \label{subsec:timestamp}
 
-Logstash zal altijd als standaard timestamp het moment nemen waarop hij de data verwerkt. Als dit live gelezen wordt is dit goed maar als er ook logs van vroeger willen inladen worden geeft dit problemen.  Daarom zal meestal de tijdsaanduiding in het begin van een log lijn gebruikt worden als timestamp. Als voorbeeld het jaar niet gegeven werd zal logstash automatisch het jaar nemen waarin het zich bevindt. Er wordt nu vanuit gegaan dat de tijdsaanduiding gecapteerd kan worden aan de hand van het patroon die uitgelegd werd in \hyperref[subsec:patroon]{\ref{subsec:patroon}}. Eerst wordt een tijdelijk field gemaakt met alleen de tijdsaanduidingen. Daarna kan de tijdzone gekozen worden en de timestamp gelijk gezet worden met ons tijdelijk field. Er moet wel mee gegeven worden hoe het tijdelijk field opgebouwd is. 
+Logstash zal altijd als standaard timestamp het moment nemen waarop hij de data verwerkt. Als dit live gelezen wordt is dit goed maar als er ook logs van vroeger willen inladen worden geeft dit problemen.  Daarom zal meestal de tijdsaanduiding in het begin van een log lijn gebruikt worden als timestamp. Als voorbeeld het jaar niet gegeven werd zal logstash automatisch het jaar nemen waarin het zich bevindt. Er wordt nu vanuit gegaan dat de tijdsaanduiding gecapteerd kan worden aan de hand van het patroon die uitgelegd werd in \ref{subsec:patroon}. Eerst wordt een tijdelijk field gemaakt met alleen de tijdsaanduidingen. Daarna kan de tijdzone gekozen worden en de timestamp gelijk gezet worden met ons tijdelijk field. Er moet wel mee gegeven worden hoe het tijdelijk field opgebouwd is. 
 
 \lstset{escapechar=@,style=customc}  
 \begin{lstlisting}[frame=single]  
@@ -174,6 +184,8 @@ Enkele nuttige commado’s die nog niet aan bod kwamen zijn het kopiëren en het
 
 \section{Output}
 Voor de output zijn weer heel wat mogelijkheden. In deze paper zullen er slechts drie aanbod komen. Hier zal dus beschreven worden wat er moet gebeuren met de JSON elementen.
+
+% BVV: Welke andere zijn er en waarom enkel deze drie bespreken?
 
 \subsection{Standaard output}
 \label{subsec:standaardoutput}

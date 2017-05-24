@@ -8,9 +8,13 @@
 \section{Introductie}
 \label{sec:introductie}
 
-Elasticsearch is het hart van elastic stack. Het is een zoek algoritme gebasseerd op indices. Voor een kleine hoeveelheid data wordt beter iets anders gebruikt aangezien de start tijd van elasticsearch} relatief lang is.
+Elasticsearch is het hart van elastic stack. Het is een zoek algoritme gebasseerd op indices.
+% BVV: Wat bedoel je met "gebaseerd op indices"?
+Voor een kleine hoeveelheid data wordt beter iets anders gebruikt aangezien de starttijd van elasticsearch relatief lang is.
 Maar voor grote hoeveelheden data is het zeer geschikt. Na de starttijd kan zo goed als live de zoekopdrachten volbrengen. 
+% BVV: "relatief lang", "kleine/grote hoeveelheid data" -> vage uitspraken die je moet quantificeren. Wat is de starttijd van ElasticSearch? Welke grootorde? Milliseconden, seconden, minuten? Is de starttijd relevant, want dit is toch een service die altijd operationeel is? Of heb je het over de starttijd van individuele zoekopdrachten? Wat is het cutoff-punt? vanaf wanneer wordt ElasticSearch wél interessant?
 Omwille van de goeie schaalbaarheid wordt het reeds bij enkele bedrijven gebruikt die met heel veel data af te rekenen krijgen **bron**.
+% BVV: idem voor "goeie [geen correct NL, trouwens] schaalbaarheid", "enkele bedrijven", "heel veel data"
 
 Om elasticsearch optimaal te laten werken is het zeer belangrijk om juist om te gaan met indices. Als voorbeeld gezocht wil worden op een bepaalde dag van de week dan kan hiervoor best een afzonderlijk field voorzien worden. 
 Daarom is het dus erg belangrijk om werk te maken van het schrijven van een goede config file voor logstash.
@@ -25,7 +29,7 @@ Indien gewenst kunnen deze stukken code ook gebruikt worden in de commandline ma
 Komt nog
 
 \section{Watcher}
-\lable{sec:watcher}
+\label{sec:watcher}
 
 Watcher is één van de tools die tot de elastic stack behoren. Het maakt het mogelijk om in bepaalde gevallen een alert te sturen.
 Het bestaat uit vier delen: planning, zoekopdracht, conditie en actie. Dit is dus ook een erg belangrijke tool voor het monitoren.
