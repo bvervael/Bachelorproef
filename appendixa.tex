@@ -1,0 +1,449 @@
+\appendix
+\chapter{Logstash config files}
+\label{ch:appendix}
+
+Linux:
+\lstset{escapechar=@,style=customc}        
+\begin{lstlisting}[frame=single]  
+input {
+    file {
+        path => "/var/log/messages"
+	path => "/var/log/auth.log"
+	path => "/var/log/kern.log"
+	path => "/var/log/cron.log"
+    }
+}
+ 
+filter {
+    
+    grok {
+        match => {
+            "message" => "%{MONTH:month} +%{MONTHDAY:monthday} %{TIME:time} %{NOTSPACE:user}(?<log_message>.*$)"
+        }
+    }
+ 
+    if [message] =~ /SAPFDG_00/ {
+        grok {
+            match => [ "message","(?<tcode>[A-Z]([A-Z]|[0-9])[0-9])" ]
+        }  
+    } 
+    if [message] =~ /dump/ {
+        grok {
+            match => [ "message","(?<word>dump)" ]
+        }  
+    } 
+    if [message] =~ /semaphore/ {
+        grok {
+            match => [ "message","(?<word>semaphore)" ]
+        }  
+    } 
+    if [message] =~ /LOAD_NO_ROLL/ {
+        grok {
+            match => [ "message","(?<word>LOAD_NO_ROLL)" ]
+        }  
+    }
+    if [message] =~ /lock/ {
+        grok {
+            match => [ "message","(?<word>lock)" ]
+        }  
+    }
+    if [message] =~ /storage/ {
+        grok {
+            match => [ "message","(?<word>storage)" ]
+        }  
+    }
+    if [message] =~ /authentication failure/ {
+        grok {
+            match => [ "message","(?<word>authentication failure)" ]
+        }  
+    }
+    if [message] =~ /memory bottleneck/ {
+        grok {
+            match => [ "message","(?<word>memory bottleneck)" ]
+        }  
+    }
+    if [message] =~ /runtime error/ {
+        grok {
+            match => [ "message","(?<word>runtime error)" ]
+        }  
+    }
+    if [message] =~ /snapshot/ {
+        grok {
+            match => [ "message","(?<word>snapshot)" ]
+        }  
+    }
+    
+    
+    mutate {
+        add_field => {"[hour]" => "%{+HH}"}
+	add_field => {"[weekday]" => "%{+EEE}"}
+    }
+    
+    date{
+        locale => "en"
+        match => ["timestamp","MMM d HH:mm:ss","MMM dd HH:mm:ss","ISO8601"]
+    }
+    
+    mutate { replace => [ "message", "%{log_message}" ]  }
+    
+    mutate {
+        remove_field => [ "time" ,"month","monthday","timestamp","log_message","@version"]
+    }
+    
+\}
+
+output {
+
+    if "dump" in [message]{
+        email{
+            subject => "Dump on %{host}"
+            to => "bvervaele@oxya.com"
+            body => "Host: %{host}\n\nTime: %{@timestamp}\n\nLine of the error: %{message}"
+            address => "smtp.gmail.com"
+            port => 587
+            username => "logserviceoxya@gmail.com"
+            password => "oxya1234"
+            use\_tls => true
+        }
+    }
+
+    if "semaphore" in [message]{
+        email{
+            subject => "Semaphore on %{host}" 
+            to => "bvervaele@oxya.com"
+            body => "Host: %{host}\n\nTime: %{@timestamp}\n\nLine of the error: %{message}"
+            address => "smtp.gmail.com"
+            port => 587
+            username => "logserviceoxya@gmail.com"
+            password => "oxya1234"
+            use\_tls => true
+        }
+    }
+    
+    elasticsearch {
+        hosts => ["localhost:9200"]
+        user => elastic
+        password => changeme
+        index => "linux"
+    }
+    stdout { 
+        codec => rubydebug
+    }
+}
+
+\end{lstlisting}
+
+Windows:
+\lstset{escapechar=@,style=customc}        
+\begin{lstlisting}[frame=single]
+input {
+  beats {
+    host=>"localhost"
+    port=>"2056"
+  }
+}
+ 
+filter {
+	mutate {
+        remove_field => [ "Category" 
+,"ComputerName","EventIdentifier","InsertionStrings","logfile","RecordNumber","SourceName","TimeGenerated","TimeWritten","EventType","RecordNumber","type"]
+    }
+}
+output {
+    
+    elasticsearch {
+         hosts => ["localhost:9200"]
+        user => elastic
+        password => changeme
+        index => "windows"
+    }
+    stdout {
+        codec => rubydebug
+    }
+}
+\end{lstlisting}
+
+Oracle:
+\lstset{escapechar=@,style=customc}        
+\begin{lstlisting}[frame=single]  
+input {
+    file {
+        path => "/oracle/FDG/saptrace/diag/rdbms/fdg/FDG/trace/alert_FDG.log"
+        codec => multiline {
+            pattern => "%{DAY} %{MONTH} %{MONTHDAY} %{TIME} %{YEAR}"
+            negate => true
+            what => "previous"
+	    auto_flush_interval => 1
+        }
+    }
+}
+ 
+filter {
+ 
+    if [message] =~ /Starting ORACLE instance/ {
+        mutate {
+            add_field => [ "oradb_status", "starting" ]
+        }
+    } else if [message] =~ /Instance shutdown complete/ {
+        mutate {
+            add_field => [ "oradb_status", "shutdown" ]
+        }
+    } else {
+        mutate {
+            add_field => [ "oradb_status", "running" ]
+        }
+    }
+ 
+    if [message] =~ /ORA-/ {
+        grok {
+            match => [ "message","(?<ORA->ORA-[0-9]*)" ]
+        }  
+    }
+
+    if [message] =~ /current log/ {
+        grok {
+            match => [ "message","(?<word>current log)" ]
+        }  
+    } 
+    if [message] =~ /deadlock/ {
+        grok {
+            match => [ "message","(?<word>deadlock)" ]
+        }  
+    }
+    if [message] =~ /DATABASE OPEN/ {
+        grok {
+            match => [ "message","(?<word>DATABASE OPEN)" ]
+        }  
+    }  
+    if [message] =~ /SYSTEM ARCHIVE LOG/ {
+        grok {
+            match => [ "message","(?<word>SYSTEM ARCHIVE LOG)" ]
+        }  
+    } 
+    if [message] =~ /CONTROLFILE/ {
+        grok {
+            match => [ "message","(?<word>CONTROLFILE)" ]
+        }  
+    } 
+    if [message] =~ /FULL/ {
+        grok {
+            match => [ "message","(?<word>FULL)" ]
+        }  
+    } 
+
+   mutate {
+        add_field => {"[hour]" => "%{+HH}"}
+	add_field => {"[weekday]" => "%{+EEE}"}
+    }
+ 
+
+    grok {
+        match => [ "message","%{DAY:day} %{MONTH:month} %{MONTHDAY:monthday} %{TIME:time} %{YEAR:year}(?<log\_message>.*$)" ]
+    }
+ 
+    mutate {
+       add_field => {
+            "timestamp" => "%{year} %{month} %{monthday} %{time}"
+       }
+    }
+
+    date {
+        timezone => "CET" 
+        match => [ "timestamp" , "yyyy MMM dd HH:mm:ss" ]
+    }
+ 
+    mutate { replace => [ "message", "%{log_message}" ]  }
+ 
+    mutate {
+        remove_field => [ "time" ,"month","monthday","year","timestamp","day","log\_message"]
+    }
+}
+ 
+output {
+    if "ORA-00257" == [ORA-] or "ORA-16038" == [ORA-]{        
+    email{
+            subject => "Archiver Hung on %{host}"
+            to => "bvervaele@oxya.com"
+            body => "Host: %{host}\n\nTime: %{@timestamp}\n\nLine of the error: %{message}"
+            address => "smtp.gmail.com"
+            port => 587
+            username => "logserviceoxya@gmail.com"
+            password => "oxya1234"
+            use_tls => true
+        }
+    }
+
+    if "ORA-01114" == [ORA-] or "ORA-01157" == [ORA-] or "ORA-01578" == [ORA-] or "ORA-27048" == [ORA-]{
+        email{
+            subject => "Data Block Corruption" on %{host}
+            to => "bvervaele@oxya.com"
+            body => "Host: %{host}\n\nTime: %{@timestamp}\n\nLine of the error: %{message}"
+            address => "smtp.gmail.com"
+            port => 587
+            username => "logserviceoxya@gmail.com"
+            password => "oxya1234"
+            use_tls => true
+        }
+    }
+
+    if "ORA-01243" == [ORA-]{
+        email{
+            subject => "Media Failure on %{host}"
+            to => "bvervaele@oxya.com"
+            body => "Host: %{host}\n\nTime: %{@timestamp}\n\nLine of the error: %{message}"
+            address => "smtp.gmail.com"
+            port => 587
+            username => "logserviceoxya@gmail.com"
+            password => "oxya1234"
+            use_tls => true
+        }
+    }
+
+    if "ORA-01502" == [ORA-] or "ORA-20000" == [ORA-] {
+        email{
+            subject => "Invalid State on %{host}"
+            to => "bvervaele@oxya.com"
+            body => "Host: %{host}\n\nTime: %{@timestamp}\n\nLine of the error: %{message}"
+            address => "smtp.gmail.com"
+            port => 587
+            username => "logserviceoxya@gmail.com"
+            password => "oxya1234"
+            use_tls => true
+        }
+    }
+
+    if "ORA-01652" == [ORA-] or "ORA-01653" == [ORA-] or "ORA-01654" == [ORA-] {
+        email{
+            subject => "Extension Error on %{host}"
+            to => "bvervaele@oxya.com"
+            body => "Host: %{host}\n\nTime: %{@timestamp}\n\nLine of the error: %{message}"
+            address => "smtp.gmail.com"
+            port => 587
+            username => "logserviceoxya@gmail.com"
+            password => "oxya1234"
+            use_tls => true
+        }
+    }
+
+    if "ORA-00600" == [ORA-] or "ORA-07445" == [ORA-] or "ORA-04" in [ORA-]{
+        email{
+            subject => "Generic Error on %{host}"
+            to => "bvervaele@oxya.com"
+            body => "Host: %{host}\n\nTime: %{@timestamp}\n\nLine of the error: %{message}"
+            address => "smtp.gmail.com"
+            port => 587
+            username => "logserviceoxya@gmail.com"
+            password => "oxya1234"
+            use_tls => true
+        }
+    }
+
+    if "ORA-00020" == [ORA-]{
+        email{
+            subject => "Maximum number of processes exceeded on %{host}"
+            to => "bvervaele@oxya.com"
+            body => "Host: %{host}\n\nTime: %{@timestamp}\n\nLine of the error: %{message}"
+            address => "smtp.gmail.com"
+            port => 587
+            username => "logserviceoxya@gmail.com"
+            password => "oxya1234"
+            use_tls => true
+        }
+    }
+    elasticsearch {
+        hosts => ["localhost:9200"]
+        user => elastic
+        password => changeme
+        index => "oracle"
+    }
+    stdout { 
+        codec => rubydebug
+        id => "test outprint" 
+    }
+}
+\end{lstlisting}
+
+MSSQL:
+\lstset{escapechar=@,style=customc}        
+\begin{lstlisting}[frame=single]
+input {
+    file {
+        path => "C:\Program Files\Microsoft SQL Server\MSSQL10_50.MSSQLSERVER\MSSQL\Log"
+		codec => multiline {
+            pattern => "%{YEAR:year}-%{MONTH:month}-%{MONTHDAY:monthday} %{TIME:time}"
+            negate => true
+            what => "previous"
+			auto\_flush_interval => 1
+        }
+    }
+}
+ 
+filter {    
+    grok {
+        match => {
+            "message" => "%{YEAR:year}-%{MONTH:month}-%{MONTHDAY:monthday} %{TIME:time} %{USERNAME:username}\s*(?<log\_message>.*$)"
+        }
+    }
+
+	mutate {
+       add_field => {
+            "timestamp" => "%{year} %{month} %{monthday} %{time}"
+       }
+    }
+	
+    date{
+        locale => "en"
+        match => ["timestamp","yyyyy mm dd HH:mm:ss","yyyyy mm dd HH:mm:ss","ISO8601"]
+    }
+    
+    mutate { replace => [ "message", "%{log_message}" ]  }
+    
+    mutate {
+        remove\_field => [ "log\_message","@version"]
+    }
+    
+ hosts => ["localhost:9200"]
+        user => elastic
+        password => changeme
+        index => "oracle"\}
+
+output {
+
+    if "dump" in [message]{
+        email{
+            subject => "Dump"
+            to => "bvervaele@oxya.com"
+            body => "Host: %{host}\n\nTime: %{@timestamp}\n\nLine of the error: %{message}"
+            address => "smtp.gmail.com"
+            port => 587
+            username => "logserviceoxya@gmail.com"
+            password => "oxya1234"
+            use\_tls => true
+        }
+    }
+
+    if "semaphore" in [message]{
+        email{
+            subject => "Semaphore"
+            to => "bvervaele@oxya.com"
+            body => "Host: %{host}\n\nTime: %{@timestamp}\n\nLine of the error: %{message}"
+            address => "smtp.gmail.com"
+            port => 587
+            username => "logserviceoxya@gmail.com"
+            password => "oxya1234"
+            use\_tls => true
+        }
+    }
+    
+    elasticsearch {
+        hosts => ["localhost:9200"]
+        user => elastic
+        password => changeme
+        index => "mssql"
+    }
+    stdout { 
+        codec => rubydebug
+    }
+}
+
+\end{lstlisting}

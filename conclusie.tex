@@ -5,12 +5,24 @@
 \chapter{Conclusie}
 \label{ch:conclusie}
 
-%% TODO: Trek een duidelijke conclusie, in de vorm van een antwoord op de
-%% onderzoeksvra(a)g(en). Wat was jouw bijdrage aan het onderzoeksdomein en
-%% hoe biedt dit meerwaarde aan het vakgebied/doelgroep? Reflecteer kritisch
-%% over het resultaat. Had je deze uitkomst verwacht? Zijn er zaken die nog
-%% niet duidelijk zijn? Heeft het ondezoek geleid tot nieuwe vragen die
-%% uitnodigen tot verder onderzoek?
+Elastic stack voldoet aan alle vereisten vooropgesteld door oXya. Indien beslist zou worden om er mee verder te gaan zal een analyse gemaakt moeten worden van welke andere log files nog gebruikt kunnen worden. Voor deze files zal dan een logstash config file geschreven moeten worden. 
+Dit zorgt er voor dat de implementatie wel wat werk zal vergen maar daarna werkt het volledig autonoom. Elastic stack zou er dan voor zorgen dat sommige problemen vroegtijdig gemeldt kunnen worden. Sommige tools en het dashboard kunnen dan geraadpleegd worden bij het onderzoeken van het probleem.
 
-\lipsum[76-80]
+Naar de toekomst toe zijn dus heel wat mogelijkheden. Elastic stack is ook nog steeds erg snel aan het groeien en zal dus nog meer mogelijkheden bieden in de toekomst. Voor oXya is dit, volgens de geschetste casus, een gepast product. Maar de uitdaging zal liggen in het op de gepaste tijd zenden van meldingen.
+Een mogelijk vervolg onderzoek zou kunnen zijn naar de anomaly detectie.
+Een andere mogelijkheid zou zijn naar het zelf schrijven van elastic aangezien het open scource is en een java api heeft.
 
+Hieronder wordt de mening van oXya zelf gegeven:
+
+
+	``De eerste resultaten bij het gebruik van Elastic stack om een bijkomende vorm van monitoring te hebben, lijken zeer positief. 
+	De mogelijkheid om verschillenden logfiles van uiteenlopende systemen (os, db , sap) te analyseren en daarin bepaalde kritische alerts te detecteren en te escaleren is zeer bruikbaar in onze omgeving. 
+	Het online oppikken van alerts was een optie die te verwachten was van deze tool. 
+	Maar wat nog interessanter blijkt te zijn, is het gedrag van bepaalde loglijnen in log-files te laten analyseren en te laten interpreteren met de “Timelion” en de “Machine Learning“ modules.
+	Wat de mogelijkheid geeft om statische beslissingen te treffen, tijdens het analyseren van deze (soms seasonal) data. 
+	Bijvoorbeeld het gebruik van de "Seasonal Holt-Winters" methode om abnormaal gedrag te voorspellen, lijken duidelijk een stap in de goede richting. 
+	Waar we vroeger enkel triggers gebruikten om alerts te generen, kunnen we nu ook anomalieën vroegtijdig detecteren. 
+	Gezien er nog veel mogelijkheden te onderzoeken zijn in het domein van machine learning zijn we zeker van plan nog verder onderzoek in te plannen op dit terrein.''
+	\begin{flushright} 
+		-Van Den Abeele, Martin
+    \end{flushright}

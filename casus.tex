@@ -1,0 +1,23 @@
+%%=============================================================================
+%% Casus
+%%=============================================================================
+
+\chapter{Casus}
+\label{ch:casus}
+Zoals steeds is oXya opzoek naar nieuwe manieren om nog beter te kunnen monitoren. Een aanvulling op hun monitoringtools zou dus het gebruiken van logfiles kunnen zijn. Deze files worden enkel bekeken als er zich een probleem voor deed om uit te zoeken was misgelopen is.
+Bij oXya ontstond zo de vraag als het niet mogelijk was om deze files te gaan monitoren en zo sneller problemen te zien komen.
+Na wat research vonden ze dat Elastic stack in opmars is. Op het eerste zicht heeft het de functionaliteiten heeft waarnaar ze opzoek zijn. De concrete vraag is dus het ontwikkelen van een monitoringtool die gebruik maakt van Elastic stack om hun log files te analyseren.
+In de volgende alinea's zal beschreven worden wat belangrijk is voor Oxya.
+
+Bij Oxya is het gebruikelijk dat elke werknemer kennis heeft van alles. Ze verwachten dus dat deze zowel kennis heeft van Linux, Windows, SAP, oracle, \dots. Dus om de werknemers niet nog extra te belasten is het belangrijk dat het gebruik van de tool makkelijk aan te leren is. 
+Een tool dat makkelijk is in gebruik zal dan ook vaker gebruikt worden. Deze bachelorproef zal dan ook zo geschreven worden dat deze gebruikt kan worden voor het aanleren van enkele basis mogelijkheden met Elastic stack.
+
+Het is ook belangrijk dat de tool autonoom kan werken. Het is dus niet de bedoeling dat iemand op een knop moet drukken om te zien als er meldingen zijn. Maar wel dat deze automatisch live meldt als ze zich voor doen. 
+
+De impelmentatie mag ook maar beperkte negatieve gevolgen hebben voor de klant. Zo kan niet verwacht worden dat de klant zijn servers moet upgraden. Er zal dus bekenen worden wat de impact is voor een klant zodat Oxya de afweging kan maken.
+
+Oxya werkt met allerlei servers, platformen en databases, die elk hun eigen logfiles en alertfiles hebben en deze hebben ook elk hun eigen formaat of record layout. Vermits dit een groot volume aan data kan vertegenwoordigen, moet er ook gefilterd worden in de data. Het moet dus mogelijk zijn om alles te normaliseren en dan samen te brengen tot één geheel. Ook het uitbreiden moet mogelijk zijn indien ze in de toekomst een nieuw programma willen gebruiken.
+
+Verwacht wordt dat het programma een probleem ziet aankomen. Dit kan door het herkennen van bepaalde errorcodes in de logs of door een steiging in een bepaald aantal errors of het aantal logs. Dus elke afwijking van het normaal gedrag, ook wel anomalie genaamd, moet gemeldt worden. Enkele mogelijkheden hiervoor zullen dus bekeken worden en geëvalueerd.
+
+Als een probleem zich zou voordoen wordt verwacht dat er een duidelijk alert opgesteld wordt. Het alert moet weergeven wat het probleem juist is en wat de reden is. Aangezien een klant over meerdere servers beschikt is het ook belangrijk aan te geven op welke server het probleem zich juist bevindt. Het is ook de bedoeling dat er geen overbodige alerts gegenereed worden want anders zal geen aandacht meer besteed worden aan deze alerts.

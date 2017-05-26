@@ -1,0 +1,13 @@
+diff a/bachproef-tin.tex b/bachproef-tin.tex	(rejected hunks)
+@@ -29,8 +29,9 @@
+ \newcommand{\instelling}{Oxya}
+ 
+ % De titel van het rapport/bachelorproef
+-\newcommand{\titel}{Log monitoring aan de hand van Elastic Stack
+-}
++\newcommand{\titel}{Log monitoring aan de hand van Elastic Stack}
++% BVV: deze titel mag nog wat uitgebreider. Wat is precies de doelstelling van het onderzoeken van de Elastic Stack?
++
+ 
+ % Datum van indienen (gebruik telkens de deadline, ook al geef je eerder af)
+ \newcommand{\datum}{2 juni 2017}

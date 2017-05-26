@@ -5,8 +5,71 @@
 \chapter{Kibana}
 \label{ch:kibana}
 
-
 \section{Introductie}
-\section{Grafieken}
+\label{sec:introductie}
+Kibana is het programma die voor de visualisatie binnen de elastic stack zorgt. Deze zal default te vinden zijn op poort 5601. 
+De eerste keer dat kabina gestart wordt zal gevraagd worden voor een index pattern. Kibana kan dus pas gebruikt worden als er al data in elasticsearch zit.
+Aan de hand van het index pattern kan al gefilterd worden. Het is ook mogelijk om een regex op te geven als index pattern. Dus * zal alle data inlezen en gebruiken. 
+Als "Time-field name" zal in deze casus altijd "@timespamp" gebruikt worden. Deze is in logstash zo ingesteld om overeen te komen met de timestamp van de log zelf.
+
+Eenmaal deze instelling gebeurd zijn kan kibana in gebruik genomen worden. Aan de linker kant bevinden zich enkele symbolen die alle opties weergeven. 
+De opties die voor de casus van belang zijn zullen hieronder verduidelijkt worden.
+
+\section{Discover}
+\label{sec:discover}
+
+Hier kunnen alle json elementen gevonden worden die matchen met het opgegeven index pattern. Bovenaan wordt een grafiek getoont van wanneer hoeveel logs gegenereerd zijn. 
+Aan de linker kant wordt dan weer een lijst getoont met welke fields allemaal te vinden zijn binnen deze selectie van data. 
+De voorstelling van de data ziet er chaotisch uit op het eerste zich. Deze kan eenvoudig gewijzigd worden door bij een element op het pijltje te drukken zodat alle fields voor dit element getoond worden.
+Deze fields kunnen dan gebruikt worden in de tabel. Om een field als kolom vast te zetten in de tabel moet éénmaal gedrukt worden op het derde icoontje. 
+Zo kan dus een overzichtelijke tabel bekomen en kan inzicht in de data verkregen worden.
+
+
+\section{Visualize}
+\label{sec:visualize}
+
+Onder visualize valt een grote variatie aan dingen: grafieken, getallen, tekst, heatmap, \dots. Voor deze casus zal voornamelijk gebruik gemaakt worden van grafieken en getallen.
+Het is belangrijk om de juist keuze te maken van visualisatie, zowel van de keuze voor de visualisatie als de data die gebruikt wordt er voor. 
+
+Als gekozen wordt om een grafiek te maken is het belangrijk eerst te kiezen wat er op de assen moet komen. Indien gewenst kan deze grafiek nog verder onderverdeeld/gfilterd worden door sub-buckets toe te voegen.
+Deze onderverdeling kan bijvoorbeeld gemaakt worden op de value van een field. Dan dient binnen de sub-bucket gekozen te worde voor Terms en dan het gewenste field.
+Ook een filter wordt via sub-buckets toegevoegd. Een filter juist definiëren wordt besproken in \hyperref[sec:filters]{\ref{sec:filters}}
+
+
+
+\section{Timelion}
+\label{sec:timelion}
+
+In timelion kunnen grafieken met elkaar vergeleken worden. Zo kan na gegaan worden hoe een grafiek er de vorige weken uitzag ten op zichte van die van deze week.
+Voor de casus kan dit zeker van pas komen voor het ontdekken van abnormale afwijkingen. 
+
+Er zijn al reeds heel wat mogelijkheden geïmplementeerd \autocite{timeliongithub}. 
+Maar om nuttige grafieken te verkrijgen zal veelal een combinatie gemaakt moeten worden van enkele van deze mogelijkheden.
+
+Helaas kan hier nog geen gemiddelde en standaard afwijking berekend worden van de zelfde momenten in de afgelopen weken.
+Dit zou voor deze casus handiger zijn omdat er 's morgen pieken zullen zijn die op die manier niet voorspeld kunnen worden.
+
 \section{Dashboard}
+\label{sec:dashboard}
+
+In dashboard kunnen alle visualisaties samengebracht worden. Hier kan dus een duidelijk overzicht van de data gecreeërd worden. De plaatsing en keuze van grafieken is natuurlijk wel van belang.
+Om het overzichtelijk te houden kunnen afzonderelijke dashboards gemaakt worden. Zo kan voor deze casus voorbeeld een dashboard gemaakt worden voor SAP, oracle, windows, \dots.
+De dashboards zijn dan ook een belangrijke informatie bron bij het zoeken naar een fout. Hier kan de zoektoch gestart worden om te kijken als er geen opvallende afwijkingen waren of om een idee te krijgen van wanneer iets fout liep.
+
 \section{Filters}
+\label{sec:filters}
+
+Er is reeds al een filter gebeurd bij het kiezen van het index pattern. Maar er zijn nog heel wat mogelijkheden.
+De filter die meest gebruikt zal worden is een filter op de tijd. De tijd kan rechts bovenaan gewijzigd worden. Zo kan er naar een specifiek moment in de tijd gegaan worden om te zien wat er gebeurd is.
+
+Voor de rest van het filteren wordt je aangewezen op de zoekbalk bovenaan. Er kan simpelweg gezocht worden op een woord die voorkomt in een json element. Zo kan voorbeeld gezocht worden op een specifieke ORA error door in de zoekbalk de code in te geven.
+In de zoekbalk kunnen ook combinaties van filters gebeuren.
+
+Er is ook de mogelijkheid om te zoeken op de waarde van een field. Dit kan aan de hand van volgende query: fieldName:"waarde"
+
+Niet elk json element heeft alle fields. Als men enkel de elementen wil zien met een field genaamd "code" kan gezocht worden op volgende query: $\_exists\_:"code"$.
+
+Als iets net niet mag voorkomen in een zoek opdracht kan men er een "!" voor tpyen.
+
+
+
