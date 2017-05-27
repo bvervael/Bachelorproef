@@ -8,21 +8,21 @@
 \section{De opdrachtgever, Oxya}
 \label{sec:de-opdrachtgever}
 
-Oxya is een internationaal bedrijf met onder meer een vesteging in Kortrijk. Het bedrijf houdt zich enkel en alleen bezig met het hosten van SAP systemen. Sap is een ERP pakket die gebruik gemaakt wordt voor de ondersteuning van bedrijfsprocessen. Bedrijven vanaf enkele werknemers gebruiken dit voor het bijhouden van financiële gegevens, voorraad aantallen, contactgegevend, \dots. Als de servers niet naar behoren functioner kan het voorkomen dat een heel bedrijf stil ligt tot de servers terug normaal functioneren. Het is dus hun functie om te monitoren als alles werkt zoals het hoort. Daarvoor zijn ze steeds opzoek naar nieuwe manieren om hen hierbij te helpen.
+Oxya is een internationaal bedrijf met onder meer een vestiging in Kortrijk. Het bedrijf houdt zich enkel en alleen bezig met het hosten van SAP-systemen. Sap is een ERP-pakket dat gebruikt wordt voor de ondersteuning van bedrijfsprocessen. Bedrijven vanaf enkele werknemers gebruiken dit voor het bijhouden van financiële gegevens, voorraad aantallen, contactgegevens, \dots. Als de servers niet naar behoren functioneren kan het voorkomen dat een heel bedrijf stil ligt tot de servers terug normaal functioneren. Het is dus hun taak om te monitoren als alles werkt zoals het hoort. Daarom zijn ze steeds opzoek naar nieuwe manieren om hen hierbij te helpen.
 
-Ze hebben reeds twee tools ter beschikking namelijk PRTG en een eigen ontwikkelde tool koaly. Beide tools vragen systeem gegeven op en gaan dan kijken als de waarden niet te hoog of te laag zijn. Om te kijken als de waarden niet te hoog of te laag zijn zijn limieten vast gelegd en deze worden thresholds genoemd. Deze limieten staan vast en moeten dus handmatig gewijzigd worden indien nodig. Dus momenteel maakt oXya enkel gebruik van statische thresholds in hun tools.
+Ze hebben reeds twee tools ter beschikking, namelijk PRTG en een eigen ontwikkelde tool koaly. Beide tools vragen systeemgegeven op en gaan dan kijken als de waarden niet te hoog of te laag zijn. Om te kijken als de waarden niet te hoog of te laag zijn, zijn limieten vastgelegd en deze worden thresholds genoemd. Deze limieten staan vast en moeten dus handmatig gewijzigd worden indien nodig. Dus momenteel maakt oXya enkel gebruik van statische thresholds in hun tools.
 
 \section{Probleemstelling en Onderzoeksvragen}
 \label{sec:onderzoeksvragen}
 
-De vraag voor dit project komt dus vanuit het bedrijf Oxya. De concrete vraag staat beschreven in \ref{ch:casus}. De opzet van deze bachelorproef is nagaan als elastic stack een juist keuze is voor deze casus.  
+De vraag voor dit project komt dus vanuit het bedrijf Oxya. De concrete vraag staat beschreven in \ref{ch:casus}. De opzet van deze bachelorproef is nagaan als elastic stack een juiste keuze is voor deze casus.  
 
 Deze bachelorproef zal een antwoord zoeken voor enkele onderzoeksvragen die werden opgesteld aan de hand van de casus.
 
 \begin{itemize}
 	\item Kan het opzetten en gebruiken van elastic stack zonder voorkennis op een relatief korte termijn aangeleerd worden?
 
-	\item Kan elastic stack autonoom werken na de initializatie fase?
+	\item Kan elastic stack autonoom werken na de initialisatiefase?
     
     \item Wat zijn op korte en lange termijn de gevolgen voor de hardware als elatic stack geïmplementeerd wordt?
 
@@ -34,25 +34,27 @@ Deze bachelorproef zal een antwoord zoeken voor enkele onderzoeksvragen die werd
 \end{itemize}
 
 
-\section{Literatuur studie}
+\section{Literatuurstudie}
 \label{sec:literatuur-studie}
 
-Elastic stack is een open source project waarvan alle bron code terug te vinden is op github. 
-Elastic stack bestaat uit drie core elementen: Logstash, Elasticsearch en Kibana. Deze drie elementen werden samen gebracht tot Elastic stack en werken nu op een erg vlotte manier samen. Elastic stack heeft nu ook tools en deze zijn samen gebracht in X-Pack. Er zijn vier tools die besproken zullen worden namelijk: watcher, shield, monitoring en machine learning. Deze zijn gekozen omdat ze potentieel mogelijkheden hebben met de data die gegenereerd zal worden uit de log files.
-Elk van de deze programma's is geschreven in java en beschikt over uitgebreide documentatie \autocite{documentatiesite}. Binnen de Elastic stack wordt dan weer gebruik gemaakt van zelf ontwikkelde talen. Ook deze beschikken over de nodige documentatie die via de Elastic site te verkrijgen is. 
-Op dit moment zijn met uitzonderingen geen stukken voorbeeldcode te vinden. De oorzaak hiervoor is dat de elastic stack nog volop aan het groeien is. Dit is te danken aan de populariteit van Elastic stack die snel toe neemt. Zo is er een sprong gemaakt van versie 3 naar versie 5 waar heel wat basis functionaliteiten gewijzigd zijn. In het verloop van deze bachelorproef zal gewerkt worden met versie 5.2 .
+Elastic stack is een open source project waarvan alle broncode terug te vinden is op github. 
+Elastic stack bestaat uit drie core elementen: Logstash, Elasticsearch en Kibana. Deze drie elementen werden samengebracht tot Elastic stack en werken nu op een erg vlotte manier samen. Elastic stack heeft nu ook tools en deze zijn samen gebracht in X-Pack. Er zijn vier tools die besproken zullen worden, namelijk: Watcher, Shield, Monitoring en Machine Learning. Deze zijn gekozen omdat ze potentieel mogelijkheden hebben met de data die gegenereerd zullen worden uit de log files.
+Elk van deze programma's is geschreven in java en beschikt over uitgebreide documentatie \autocite{documentatiesite}. Binnen de Elastic stack wordt dan weer gebruik gemaakt van zelf ontwikkelde talen. Ook deze beschikken over de nodige documentatie die via de Elastic site te verkrijgen is. 
+Op dit moment zijn met uitzonderingen geen stukken voorbeeldcode te vinden. De oorzaak hiervan is dat de elastic stack nog volop aan het groeien is. Dit is te danken aan de populariteit van Elastic stack die snel toeneemt. Zo is er een sprong gemaakt van versie 3 naar versie 5 waar heel wat basisfunctionaliteiten gewijzigd zijn. In het verloop van deze bachelorproef zal gewerkt worden met versie 5.2 .
+
+Verder is als voor het schrijven van deze bachelorproef ook gebruik gemaakt van de boeken: \autocite{logstashboek} en \autocite{monitoringboek}. Ook de bachelorproef van \textcite{bp2016} hielp bij de kennismaking met Elastic stack.
 
 Bedrijven als eBay, Netflix, The Guardian, \dots gebruiken elastic stack voor het beheren van hun data \autocite{15companies}. Dit wijst er dus op dat het geschikt is om te werken met terabytes data. Dit zijn bedrijven die hun code liever niet delen. Er is dus niet geweten in welke mate ze gebruik maken van elastic stack en welke uitbreidingen zij eventueel gemaakt hebben.
 
-Aangezien de voorbeelden online beperkt zijn zal de grootste bron van informatie de documentatie van Elastic zelf zijn. Ook het aantal boeken is eerder beperkt. Het grootste probleem is dat door de snelle evolutie van elastic stack heel wat documentatie outdated is, zeker na de sprong van versie 3 naar 5. Gelukkig is er wel een actief forum\footnote{https://discuss.elastic.co/} waarop je meestal antwoord krijgt binnen de paar uur.
+Aangezien de voorbeelden online beperkt zijn, zal de grootste bron van informatie de documentatie van Elastic zelf zijn. Ook het aantal boeken is eerder beperkt. Het grootste probleem is dat door de snelle evolutie van elastic stack heel wat documentatie outdated is, zeker na de sprong van versie 3 naar 5. Gelukkig is er wel een actief forum\footnote{https://discuss.elastic.co/} waarop je meestal antwoord krijgt binnen de paar uur.
 
 \section{Opzet van deze bachelorproef}
 \label{sec:opzet-bachelorproef}
 
 De rest van deze bachelorproef is als volgt opgebouwd:
 
-Eerst en vooral zal de casus geschets worden in \ref{ch:casus}. Daarna zal in \ref{ch:elasticstack} aan  de hand en overzicht de globale werking van Elastic stack uitgelegd worden. 
-In de daarop volgende hoofdstukken \ref{ch:logstash},\ref{ch:elasticsearch-xpack} en \ref{ch:kibana} wordt de werking van elke core component van elastic stack toegelicht. Er zal ook telkens onmiddelijk gekeken worden welke mogelijkheden dit met zich mee brengt voor onze casus. 
-\ref{ch:evaluatie-casus} Bevat de evalutie van alle onderzoeksvragen die uit de casus gehaald werden.
-In Hoofdstuk \ref{ch:conclusie}, tenslotte, wordt de conclusie gegeven en een antwoord geformuleerd op de vraag als elastic stack een meerwaarde kan hebben voor oXya. Daarbij wordt ook een aanzet gegeven voor toekomstig onderzoek binnen dit domein. Ook zal de mening van Oxya gevraagd worden omtrend de bruikbaarheid van elastic stack voor monitoring. 
-De installatie zal niet aan bod komen omdat deze reeds heel goed uitgelegd is op de elastic download pagina.
+Eerst en vooral zal de casus geschetst worden in \ref{ch:casus}. Daarna zal in \ref{ch:elasticstack} aan de hand van een overzicht de globale werking van Elastic stack uitgelegd worden. 
+In de daarop volgende hoofdstukken \ref{ch:logstash}, \ref{ch:elasticsearch-xpack} en \ref{ch:kibana} wordt de werking van elke core component van elastic stack toegelicht. Er zal ook telkens onmiddelijk gekeken worden welke mogelijkheden dit met zich meebrengt voor onze casus. 
+\ref{ch:evaluatie-casus} bevat de evalutie van alle onderzoeksvragen die uit de casus gehaald werden.
+In Hoofdstuk \ref{ch:conclusie}, tenslotte, wordt de conclusie gegeven en een antwoord geformuleerd op de vraag als elastic stack een meerwaarde kan hebben voor oXya. Daarbij wordt ook een aanzet gegeven voor toekomstig onderzoek binnen dit domein. Ook zal de mening van Oxya gevraagd worden omtrent de bruikbaarheid van elastic stack voor monitoring. 
+De installatie zal niet aan bod komen omdat deze reeds heel goed uitgelegd is op de elastic downloadpagina.
